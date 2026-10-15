@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Гравюры</title>
+  <meta name="description" content="Галерея гравюр: офорт, линогравюра, ксилография">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='black'/><rect x='30' y='30' width='40' height='40' fill='none' stroke='white' stroke-width='4'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="lock">
+
+  <!-- ИНТРО: чёрный лист поверх сайта -->
+  <div id="intro">
+    <canvas id="scratch"></canvas>
+    <p class="intro-hint" id="introHint">Проведите пальцем</p>
+    <button class="intro-skip" id="introSkip" type="button">Войти</button>
+  </div>
+
+  <header class="top">
+    <a href="#top" class="brand" id="brand"></a>
+    <nav>
+      <a href="#works">Работы</a>
+      <a href="#catalog">Каталог</a>
+      <a href="#about">Об авторе</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <h1 id="heroName"></h1>
+      <p id="tagline"></p>
+      <div class="line"></div>
+    </section>
+
+    <section id="works" class="section">
+      <div class="section-head">
+        <h2>Работы</h2>
+        <span class="count" id="worksCount"></span>
+      </div>
+      <div id="gallery" class="gallery"></div>
+    </section>
+
+    <section id="catalog" class="section">
+      <div class="section-head">
+        <h2>Каталог</h2>
+      </div>
+      <div id="filters" class="filters"></div>
+      <div id="catalogList" class="catalog"></div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="section-head"><h2>Об авторе</h2></div>
+      <div class="about-grid">
+        <img id="portrait" alt="Портрет автора">
+        <div>
+          <div id="aboutText" class="text"></div>
+
+          <div id="techniqueWrap">
+            <h3>О технике</h3>
+            <div id="technique" class="text"></div>
+          </div>
+
+          <div id="exhibitionsWrap">
+            <h3>Выставки</h3>
+            <ul id="exhibitions" class="list"></ul>
+          </div>
+
+          <div id="purchaseWrap">
+            <h3>Как приобрести</h3>
+            <div id="purchase" class="text"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacts" class="section contacts">
+      <h2>Контакты</h2>
+      <a id="email" class="big"></a>
+      <div id="socials" class="socials"></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© <span id="year"></span> <span id="footName"></span></span>
+    <a href="#top">Наверх ↑</a>
+  </footer>
+
+  <!-- ПРОСМОТР РАБОТЫ -->
+  <div id="lightbox" class="lb" aria-hidden="true">
+    <div class="lb-counter" id="lbCounter"></div>
+    <button class="lb-close" id="lbClose" type="button" aria-label="Закрыть">✕</button>
+    <button class="lb-prev" id="lbPrev" type="button" aria-label="Назад">←</button>
+    <figure class="lb-fig">
+      <img id="lbImg" alt="">
+      <figcaption>
+        <div id="lbTitle" class="lb-title"></div>
+        <div id="lbMeta" class="lb-meta"></div>
+        <div id="lbDesc" class="lb-desc"></div>
+      </figcaption>
+    </figure>
+    <button class="lb-next" id="lbNext" type="button" aria-label="Вперёд">→</button>
+  </div>
+
+  <script src="works.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
