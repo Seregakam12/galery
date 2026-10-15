@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Редактор работ</title>
+<meta name="robots" content="noindex">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #f4f2ee; color: #1d1d1f; margin: 0; padding: 1.5rem; line-height: 1.5; }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  h1 { font-weight: 500; margin: 0 0 .25rem; }
+  h2 { font-weight: 500; font-size: 1.2rem; margin: 2rem 0 .75rem; }
+  .hint { color: #6e6e73; margin: 0 0 1.5rem; font-size: .9rem; }
+  .panel { background: #fff; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  form { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem 1rem; }
+  label { display: flex; flex-direction: column; gap: .3rem; font-size: .85rem; color: #555; }
+  label.full { grid-column: 1 / -1; }
+  input { font: inherit; padding: .55rem .7rem; border: 1px solid #d9d4cc; border-radius: 8px; background: #fff; }
+  input:focus { outline: 2px solid #8b5e3c; outline-offset: 0; border-color: transparent; }
+  .preview { grid-column: 1 / -1; max-height: 220px; max-width: 100%; object-fit: contain; border-radius: 8px; background: #eee; justify-self: start; }
+  .row { grid-column: 1 / -1; display: flex; gap: .5rem; flex-wrap: wrap; }
+  button, .btn { font: inherit; font-size: .9rem; padding: .55rem 1rem; border: 0; border-radius: 8px; cursor: pointer; background: #e9e5df; color: #1d1d1f; }
+  button:hover, .btn:hover { background: #ddd7ce; }
+  .primary { background: #8b5e3c; color: #fff; }
+  .primary:hover { background: #774f31; }
+  .danger { background: #f3dcdc; color: #8a1f1f; }
+  .danger:hover { background: #ecc9c9; }
+  .toolbar { display: flex; gap: .5rem; flex-wrap: wrap; margin: 1.5rem 0 1rem; }
+  .btn input { display: none; }
+  ol { list-style: none; padding: 0; margin: 0; display: grid; gap: .6rem; }
+  li { display: flex; align-items: center; gap: .9rem; background: #fff; border-radius: 10px; padding: .6rem; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+  li.editing { outline: 2px solid #8b5e3c; }
+  .num { width: 1.8rem; text-align: center; color: #999; font-size: .85rem; flex-shrink: 0; }
+  .thumb { width: 64px; height: 64px; object-fit: cover; border-radius: 6px; background: #eee; flex-shrink: 0; }
+  .info { flex: 1; min-width: 0; }
+  .info b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .info small { color: #6e6e73; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .info code { font-size: .75rem; color: #999; }
+  .actions { display: flex; gap: .3rem; flex-shrink: 0; }
+  .actions button { padding: .4rem .6rem; min-width: 34px; }
+  .empty { color: #6e6e73; justify-content: center; padding: 2rem; }
+  textarea { width: 100%; min-height: 220px; font: .8rem/1.45 ui-monospace, Consolas, monospace; padding: .8rem; border: 1px solid #d9d4cc; border-radius: 10px; background: #fff; resize: vertical; }
+  .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: #1d1d1f; color: #fff; padding: .6rem 1.1rem; border-radius: 8px; font-size: .9rem; opacity: 0; transition: opacity .25s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+  @media (max-width: 640px) {
+    form { grid-template-columns: 1fr; }
+    li { flex-wrap: wrap; }
+    .actions { width: 100%; justify-content: flex-end; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Редактор работ</h1>
+  <p class="hint">Положите картинки в папку <b>images</b>, добавьте их здесь, затем нажмите «Скачать works.js» и замените им старый файл в папке сайта. Черновик сохраняется в браузере автоматически.</p>
+
+  <div class="panel">
+    <form id="form" autocomplete="off">
+      <label class="full">Выбрать картинку из папки images (путь заполнится сам)
+        <input type="file" id="f-file" accept="image/*">
+      </label>
+      <label>Путь к картинке *
+        <input id="f-src" required placeholder="images/01.jpg">
+      </label>
+      <label>Миниатюра (необязательно)
+        <input id="f-thumb" placeholder="images/thumbs/01.jpg">
+      </label>
+      <label>Название
+        <input id="f-title" placeholder="Утро на реке">
+      </label>
+      <label>Год
+        <input id="f-year" placeholder="2024">
+      </label>
+      <label>Техника
+        <input id="f-technique" placeholder="Холст, масло">
+      </label>
+      <label>Размер
+        <input id="f-size" placeholder="60 × 80 см">
+      </label>
+      <img class="preview" id="preview" alt="" hidden>
+      <div class="row">
+        <button type="submit" class="primary" id="submit-btn">Добавить работу</button>
+        <button type="button" id="cancel-btn" hidden>Отменить редактирование</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="toolbar">
+    <button type="button" class="primary" id="download-btn">Скачать works.js</button>
+    <button type="button" id="copy-btn">Скопировать код</button>
+    <label class="btn">Загрузить works.js
+      <input type="file" id="import-file" accept=".js,.json,text/javascript,application/json">
+    </label>
+    <button type="button" class="danger" id="reset-btn">Сбросить черновик</button>
+  </div>
+
+  <h2>Работы (<span id="count">0</span>)</h2>
+  <ol id="list"></ol>
+
+  <h2>Код файла works.js</h2>
+  <textarea id="output" readonly spellcheck="false"></textarea>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Если рядом лежит works.js — его содержимое подхватится как стартовое -->
+<script src="works.js"></script>
+<script>
+(() => {
+  'use strict';
+
+  const STORAGE_KEY = 'artist-site-works-draft';
+  const FIELDS = ['src', 'thumb', 'title', 'year', 'technique', 'size'];
+  const $ = (id) => document.getElementById(id);
+
+  const form = $('form');
+  const fileInput = $('f-file');
+  const preview = $('preview');
+  const submitBtn = $('submit-btn');
+  const cancelBtn = $('cancel-btn');
+  const listEl = $('list');
+  const output = $('output');
+  const toastEl = $('toast');
+
+  let list = loadInitial();
+  let editIndex = -1;
+  let previewUrl = null;
+
+  /* ---------- Хранилище ---------- */
+  function clean(w) {
+    const o = {};
+    FIELDS.forEach((f) => {
+      const v = (w && w[f] != null) ? String(w[f]).trim() : '';
+      if (v) o[f] = v;
+    });
+    return o;
+  }
+
+  function fromFileWorks() {
+    return Array.isArray(window.WORKS) ? window.WORKS.map(clean).filter((w) => w.src) : [];
+  }
+
+  function loadInitial() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (Array.isArray(saved)) return saved.map(clean).filter((w) => w.src);
+    } catch (e) { /* пусто */ }
+    return fromFileWorks();
+  }
+
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch (e) { /* пусто */ }
+  }
+
+  /* ---------- Вывод ---------- */
+  function buildCode() {
+    return '// Список работ для галереи. Сгенерировано в admin.html\n' +
+      '// Порядок в списке = порядок на сайте.\n\n' +
+      'window.WORKS = ' + JSON.stringify(list, null, 2) + ';\n';
+  }
+
+  function toast(text) {
+    toastEl.textContent = text;
+    toastEl.classList.add('show');
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => toastEl.classList.remove('show'), 1800);
+  }
+
+  function makeBtn(text, title, onClick, cls) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = text;
+    b.title = title;
+    b.setAttribute('aria-label', title);
+    if (cls) b.className = cls;
+    b.addEventListener('click', onClick);
+    return b;
+  }
+
+  function render() {
+    listEl.innerHTML = '';
+    $('count').textContent = list.length;
+
+    if (!list.length) {
+      const li = document.createElement('li');
+      li.className = 'empty';
+      li.textContent = 'Пока пусто — добавьте первую работу выше.';
+      listEl.append(li);
+    }
+
+    list.forEach((w, i) => {
+      const li = document.createElement('li');
+      if (i === editIndex) li.className = 'editing';
+
+      const num = document.createElement('span');
+      num.className = 'num';
+      num.textContent = i + 1;
+
+      const img = document.createElement('img');
+      img.className = 'thumb';
+      img.src = w.thumb || w.src;
+      img.alt = '';
+      img.loading = 'lazy';
+      img.onerror = () => { img.removeAttribute('src'); img.title = 'Файл не найден: ' + w.src; };
+
+      const info = document.createElement('div');
+      info.className = 'info';
+      const b = document.createElement('b');
+      b.textContent = w.title || 'Без названия';
+      const small = document.createElement('small');
+      small.textContent = [w.year, w.technique, w.size].filter(Boolean).join(' · ') || '—';
+      const code = document.createElement('code');
+      code.textContent = w.src;
+      info.append(b, small, code);
+
+      const actions = document.createElement('div');
+      actions.className = 'actions';
+      actions.append(
+        makeBtn('↑', 'Выше', () => move(i, -1)),
+        makeBtn('↓', 'Ниже', () => move(i, 1)),
+        makeBtn('✎', 'Редактировать', () => startEdit(i)),
+        makeBtn('✕', 'Удалить', () => remove(i), 'danger')
+      );
+
+      li.append(num, img, info, actions);
+      listEl.append(li);
+    });
+
+    output.value = buildCode();
+    save();
+  }
+
+  /* ---------- Действия со списком ---------- */
+  function move(i, dir) {
+    const j = i + dir;
+    if (j < 0 || j >= list.length) return;
+    [list[i], list[j]] = [list[j], list[i]];
+    if (editIndex === i) editIndex = j;
+    else if (editIndex === j) editIndex = i;
+    render();
+  }
+
+  function remove(i) {
+    const name = list[i].title || list[i].src;
+    if (!confirm('Удалить «' + name + '»?')) return;
+    list.splice(i, 1);
+    if (editIndex === i) resetForm();
+    else if (editIndex > i) editIndex--;
+    render();
+  }
+
+  function startEdit(i) {
+    editIndex = i;
+    const w = list[i];
+    FIELDS.forEach((f) => { $('f-' + f).value = w[f] || ''; });
+    showPreview(w.src);
+    submitBtn.textContent = 'Сохранить изменения';
+    cancelBtn.hidden = false;
+    render();
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    $('f-title').focus({ preventScroll: true });
+  }
+
+  function resetForm() {
+    form.reset();
+    editIndex = -1;
+    submitBtn.textContent = 'Добавить работу';
+    cancelBtn.hidden = true;
+    showPreview(null);
+  }
+
+  function showPreview(src) {
+    if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = null; }
+    if (!src) { preview.hidden = true; preview.removeAttribute('src'); return; }
+    preview.src = src;
+    preview.hidden = false;
+  }
+
+  /* ---------- Форма ---------- */
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    $('f-src').value = 'images/' + file.name;
+    if (!$('f-title').value.trim()) {
+      $('f-title').value = file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ');
+    }
+    showPreview(null);
+    previewUrl = URL.createObjectURL(file);
+    preview.src = previewUrl;
+    preview.hidden = false;
+  });
+
+  $('f-src').addEventListener('change', (e) => {
+    if (!previewUrl) showPreview(e.target.value.trim() || null);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const w = {};
+    FIELDS.forEach((f) => { w[f] = $('f-' + f).value; });
+    const item = clean(w);
+    if (!item.src) { $('f-src').focus(); return; }
+
+    if (editIndex >= 0) {
+      list[editIndex] = item;
+      toast('Изменения сохранены');
+    } else {
+      list.push(item);
+      toast('Работа добавлена');
+    }
+    resetForm();
+    render();
+    fileInput.focus();
+  });
+
+  cancelBtn.addEventListener('click', () => { resetForm(); render(); });
+
+  /* ---------- Экспорт ---------- */
+  $('download-btn').addEventListener('click', () => {
+    const blob = new Blob([buildCode()], { type: 'text/javascript;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'works.js';
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    toast('Файл works.js скачан');
+  });
+  $('copy-btn').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(buildCode());
+    } catch (e) {
+      output.focus();
+      output.select();
+      document.execCommand('copy');
+    }
+    toast('Код скопирован');
+  });
+
+  /* ---------- Импорт ---------- */
+  function parseWorks(text, isJson) {
+    if (isJson) return JSON.parse(text);
+
+    // 1) Быстрый путь: вырезаем массив [ ... ] и читаем как JSON
+    const startIdx = text.indexOf('[');
+    const endIdx = text.lastIndexOf(']');
+    if (startIdx !== -1 && endIdx > startIdx) {
+      try { return JSON.parse(text.slice(startIdx, endIdx + 1)); } catch (e) { /* дальше */ }
+    }
+
+    // 2) Запасной путь: выполняем файл в «песочнице» с поддельным window
+    const fakeWindow = {};
+    new Function('window', text + '\n;return window.WORKS;')(fakeWindow);
+    return fakeWindow.WORKS;
+  }
+
+  $('import-file').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      try {
+        const data = parseWorks(String(reader.result), file.name.toLowerCase().endsWith('.json'));
+        if (!Array.isArray(data)) throw new Error('not array');
+
+        const imported = data.map(clean).filter((w) => w.src);
+        if (list.length && !confirm('Заменить текущий список (' + list.length + ' шт.) работами из файла (' + imported.length + ' шт.)?')) {
+          return;
+        }
+        list = imported;
+        resetForm();
+        render();
+        toast('Загружено работ: ' + imported.length);
+      } catch (err) {
+        alert('Не удалось прочитать файл. Убедитесь, что это works.js, созданный этим редактором или по образцу.');
+      } finally {
+        e.target.value = '';
+      }
+    };
+
+    reader.onerror = () => {
+      alert('Ошибка чтения файла.');
+      e.target.value = '';
+    };
+
+    reader.readAsText(file, 'utf-8');
+  });
+
+  /* ---------- Сброс черновика ---------- */
+  $('reset-btn').addEventListener('click', () => {
+    if (!confirm('Сбросить черновик? Список вернётся к содержимому файла works.js из папки сайта.')) return;
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* пусто */ }
+    list = fromFileWorks();
+    resetForm();
+    render();
+    toast('Черновик сброшен');
+  });
+
+  /* ---------- Старт ---------- */
+  render();
+})();
+</script>
+</body>
+</html>
