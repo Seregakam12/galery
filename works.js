@@ -99,5 +99,19 @@ window.WORKS = [
     "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "20 х 30 см"
+  },
+  {
+    "src": "images/15.jpg",
+    "title": "Призраки / Ghosts",
+    "year": "2026",
+    "technique": "Керамика, гравюра, акрил",
+    "size": "30 х 20 см"
+  },
+  {
+    "src": "images/16.jpg",
+    "title": "Свидание / The Date",
+    "year": "2026",
+    "technique": "Керамика, гравюра, акрил",
+    "size": "20 х 30 см"
   }
 ];
