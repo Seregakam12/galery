@@ -26,7 +26,7 @@ window.WORKS = [
   {
     "src": "images/03.jpg",
     "title": "Будущее",
-    "year": "2024",
+    "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "30 х 20 см"
   },
