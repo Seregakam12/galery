@@ -4,84 +4,84 @@
 window.WORKS = [
   {
     "src": "images/01.jpg",
-    "title": "В конце пути",
+    "title": "В конце пути / At the End of the Road",
     "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "20 × 30 см"
   },
   {
     "src": "images/02_href.jpg",
-    "title": "Демократия",
+    "title": "Демократия / Democracy",
     "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "20 × 30 см"
   },
   {
     "src": "images/04.jpg",
-    "title": "Одиночество",
+    "title": "Одиночество / Solitude",
     "year": "2025",
     "technique": "Керамика, гравюра, акрил",
     "size": "30 × 20 см"
   },
   {
     "src": "images/03.jpg",
-    "title": "Будущее",
+    "title": "Будущее / The Future",
     "year": "2024",
     "technique": "Керамика, гравюра, акрил",
     "size": "30 х 20 см"
   },
   {
     "src": "images/05.jpg",
-    "title": "Музыка согревает",
+    "title": "Музыка согревает / Music Keeps Us Warm",
     "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "30 х 20 см"
   },
   {
     "src": "images/06.jpg",
-    "title": "Маленькая симфония",
+    "title": "Маленькая симфония / A Little Symphony",
     "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "30 х 20 см"
   },
   {
     "src": "images/07.jpg",
-    "title": "Как прекрасен этот мир",
+    "title": "Как прекрасен этот мир / What a Wonderful World",
     "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "20 х 30 см"
   },
   {
     "src": "images/08.jpg",
-    "title": "Встреча",
+    "title": "Встреча / The Meeting",
     "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "20 х 30 см"
   },
   {
     "src": "images/09.jpg",
-    "title": "Завтра",
+    "title": "Завтра / Tomorrow",
     "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "30 х 20 см"
   },
   {
     "src": "images/10.jpg",
-    "title": "Пешеходы",
+    "title": "Пешеходы / Pedestrians",
     "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "30 х20 см"
   },
   {
     "src": "images/11.jpg",
-    "title": "Яблоко раздора",
+    "title": "Яблоко раздора / The Apple of Discord",
     "year": "2024",
     "technique": "Керамика, гравюра, акрил",
     "size": "30 х 20 см"
   },
   {
     "src": "images/12.jpg",
-    "title": "Обед",
+    "title": "Обед / Lunch",
     "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "20 х 30 см"
