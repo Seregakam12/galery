@@ -106,5 +106,40 @@ window.WORKS = [
     "year": "2026",
     "technique": "Керамика, гравюра, акрил",
     "size": "20 х 30 см"
+  },
+  {
+    "src": "images/18.jpg",
+    "title": "Двое / Two",
+    "year": "2026",
+    "technique": "Гравюра, акрил, керамика",
+    "size": "30 х 20 см"
+  },
+  {
+    "src": "images/19.jpg",
+    "title": "В очереди за вторым шансом / In Line for a Second Chance",
+    "year": "2026",
+    "technique": "Керамика, гравюра, акрил",
+    "size": "20 х 30 см"
+  },
+  {
+    "src": "images/20.jpg",
+    "title": "Слепой / Blind",
+    "year": "2026",
+    "technique": "Керамика, гравюра, акрил",
+    "size": "20 х 30 см"
+  },
+  {
+    "src": "images/21.jpg",
+    "title": "Удачный кадр / The Lucky Shot",
+    "year": "2026",
+    "technique": "Керамика, гравюра, акрил",
+    "size": "20 х 30 см"
+  },
+  {
+    "src": "images/22.jpg",
+    "title": "Храм у дороги / The Church by the Road",
+    "year": "2026",
+    "technique": "Керамика, гравюра, акрил",
+    "size": "30 х 20 см"
   }
 ];
